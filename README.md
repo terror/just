@@ -1041,6 +1041,7 @@ foo:
 | `fallback` | boolean | `false` | Search `justfile` in parent directory if the first recipe on the command line is not found. |
 | `ignore-comments` | boolean | `false` | Ignore recipe lines beginning with `#`. |
 | `lazy`<sup>1.47.0</sup> | boolean | `false` | Don't evaluate unused variables. |
+| `no-exit-message`<sup>1.39.0</sup> | boolean | `false` | Don't print an error message if a recipe fails. Can be overridden on a per-recipe basis with the `[exit-message]` attribute. |
 | `positional-arguments` | boolean | `false` | Pass positional arguments. |
 | `quiet` | boolean | `false` | Disable echoing recipe lines before executing. |
 | `script-interpreter`<sup>1.33.0</sup> | `[COMMAND, ARGS…]` | `['sh', '-eu']` | Set command used to invoke recipes with empty `[script]` attribute. |
@@ -2337,6 +2338,7 @@ change their behavior.
 | `[doc(DOC)]`<sup>1.27.0</sup> | module, recipe | Set recipe or module's [documentation comment](#documentation-comments) to `DOC`. |
 | `[dragonfly]`<sup>1.47.0</sup> | recipe | Enable recipe on DragonFly BSD. |
 | `[env(ENV_VAR, VALUE)]` <sup>1.47.0</sup> | recipe | Set environment variables for recipe. |
+| `[exit-message]`<sup>1.39.0</sup> | recipe | Print an error message if recipe fails, overriding `set no-exit-message`. |
 | `[extension(EXT)]`<sup>1.32.0</sup> | recipe | Set shebang recipe script's file extension to `EXT`. `EXT` should include a period if one is desired. |
 | `[freebsd]`<sup>1.47.0</sup> | recipe | Enable recipe on FreeBSD. |
 | `[group(NAME)]`<sup>1.27.0</sup> | module, recipe | Put recipe or module in [group](#groups) `NAME`. |
@@ -3947,6 +3949,19 @@ git *args:
 ```console
 $ just git status
 fatal: not a git repository (or any of the parent directories): .git
+```
+
+Exit messages can also be suppressed for every recipe in a justfile with `set
+no-exit-message`<sup>1.39.0</sup>. When `no-exit-message` is set, the
+`[exit-message]`<sup>1.39.0</sup> attribute can be used to re-enable the exit
+message for individual recipes:
+
+```just
+set no-exit-message
+
+[exit-message]
+git *args:
+    @git {{args}}
 ```
 
 ### Selecting Recipes to Run With an Interactive Chooser
